@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>AI聊天</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        html, body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        .top-area {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 70px; /* 留出输入区域 */
+        }
+
+        .chat-container {
+            position: absolute;
+            top: 60%;
+            bottom: 70px;
+            left: 0;
+            width: 100%;
+            max-width: 100%; /* ✅ 防止撑宽 */
+            box-sizing: border-box; /* ✅ 防止 padding 撑爆 */
+            overflow-x: hidden; /* ✅ 不要横向滚动 */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            touch-action: pan-y;
+            padding: 0 20px;
+        }
+
+        .message-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 100%;
+            max-width: 100%; /* ✅ 防止撑宽 */
+            box-sizing: border-box; /* ✅ 避免 margin 计算错 */
+            pointer-events: auto;
+        }
+
+        .message {
+            max-width: 45%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.5;
+            background-color: rgba(255, 255, 255, 0.85);
+            word-break: break-word;
+        }
+
+        .message.user {
+            background-color: rgba(0, 123, 255, 0.85);
+            color: white;
+            margin-right: 10px;
+        }
+
+        .message.ai {
+            background-color: rgba(240, 240, 240, 0.9);
+            color: #000;
+            margin-left: 10px;
+        }
+
+        .message.ai::before {
+            content: "🤖";
+            margin-right: 6px;
+        }
+
+        .message.user::before {
+            content: "🧑";
+            margin-right: 6px;
+        }
+
+        .input-container {
+            position: absolute;
+            bottom: 0;
+            height: 70px;
+            width: 100%;
+            background-color: #fff;
+            z-index: 10;
+        }
+
+        .input-area {
+            display: flex;
+            align-items: center;
+            background-color: #f0f0f0;
+            border-radius: 25px;
+            padding: 10px;
+            height: 50px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .input-area input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            padding: 5px;
+            background: none;
+        }
+
+        .input-area button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #007bff;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+
+        .input-area button:hover {
+            color: #0056b3;
+        }
+
+        .voice-input-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+            border-radius: 25px;
+            padding: 10px;
+            height: 50px;
+            box-sizing: border-box;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .voice-input-area span {
+            font-size: 16px;
+            color: #007bff;
+        }
+
+        /* 旋转 loading 圈 */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            margin-right: 6px;
+            border: 2px solid #999;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* 跳动的三个点 */
+        .dot {
+            animation: blink 1.5s infinite;
+            font-weight: bold;
+            opacity: 0;
+        }
+
+        .dot1 {
+            animation-delay: 0s;
+        }
+
+        .dot2 {
+            animation-delay: 0.2s;
+        }
+
+        .dot3 {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+<!-- 上半区域 -->
+<div class="top-area"></div>
+
+<!-- 聊天容器 -->
+<div class="chat-container">
+    <div class="message-row">
+        <div class="message ai">AI 内容</div>
+        <div class="message user">用户内容</div>
+    </div>
+</div>
+
+
+<!-- 输入区域 -->
+<div class="input-container">
+    <div class="input-area" id="input-area">
+        <button class="input-toggle" id="toggle-button">
+            <i class="fas fa-keyboard"></i>
+        </button>
+        <div class="voice-input-area" id="voice-input-area">
+            <span>点击说话</span>
+        </div>
+        <input id="text-input" placeholder="发送消息" style="display: none;" type="text">
+        <button class="send-button" id="send-button" style="display: none;">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+<script src="js/dialog.js"></script>
+</body>
+</html>

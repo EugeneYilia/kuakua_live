@@ -1,0 +1,6 @@
+version: "1"
+authtoken: 2ucieknUrJ4HXIF3Lq66hXrfzX7_3ES2R5KgecqMHq8jXByQC
+tunnels:
+  dh_server:
+    proto: http
+    addr: 80
