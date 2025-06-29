@@ -1,3 +1,4 @@
+import json
 import logging
 import httpx
 
@@ -19,7 +20,9 @@ async def fetch_llm_stream_async(message: str):
         "Accept": "text/plain"
     }
     payload = {
-        "question": message
+        "question": message,
+        "model" : "Qwen1.5-1.8B-Chat-AWQ",
+        "top_k": 1
     }
 
     try:
